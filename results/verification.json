@@ -1,0 +1,18 @@
+{
+  "release_id": "7b64a2bb333edffc6e6f2f50975acda9c4871606",
+  "url": "https://csce412masonnguyen1223.me",
+  "checks": {
+    "index.html": "pass",
+    "about.html": "pass",
+    "services.html": "pass",
+    "projects.html": "pass",
+    "contact.html": "pass",
+    "release": "pass",
+    "styles.css": "pass",
+    "script.js": "pass",
+    "https": "pass",
+    "s3_block_public_access": "pass",
+    "anonymous_s3_denied": "pass"
+  },
+  "passed": true
+}
