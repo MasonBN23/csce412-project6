@@ -1,0 +1,15 @@
+version: 0.2
+phases:
+  install:
+    runtime-versions:
+      python: 3.11
+    commands:
+      - pip install -r requirements.txt
+  pre_build:
+    commands:
+      - python scripts/build.py
+      - python -m pytest -q tests
+  build:
+    commands:
+      - python -m scripts.deploy_and_verify || { python -m agents.run diagnosis --evidence results/verification.json; exit 1; }
+      - python -m agents.run verification
