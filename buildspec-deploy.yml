@@ -5,10 +5,14 @@ phases:
       python: 3.11
     commands:
       - pip install -r requirements.txt
+
   pre_build:
     commands:
+      - export RELEASE_ID="${CODEBUILD_RESOLVED_SOURCE_VERSION}"
+      - echo "Using RELEASE_ID=$RELEASE_ID"
       - python scripts/build.py
       - python -m pytest -q tests
+
   build:
     commands:
       - python -m scripts.deploy_and_verify || { python -m agents.run diagnosis --evidence results/verification.json; exit 1; }
