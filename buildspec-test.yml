@@ -1,17 +1,39 @@
+
 version: 0.2
+
 phases:
   install:
     runtime-versions:
-      python: 3.11
+      python: 3.13
     commands:
+      - python -m pip install --upgrade pip
       - pip install -r requirements.txt
+
   pre_build:
     commands:
-      - python scripts/build.py
+      - mkdir -p results
+      - echo "Starting AI-assisted CI validation"
+
   build:
     commands:
-      - python -m agents.run pipeline
-      - python -m agents.run testing || { python -m agents.run diagnosis --evidence results/pytest.xml; exit 1; }
+      - |
+        set -e
+        python -m agents.run pipeline
+
+        if ! python -m agents.run testing; then
+          echo "Tests failed - running Failure Analyst"
+          python -m agents.run diagnosis --evidence results/pytest.xml || true
+          exit 1
+        fi
+
+        echo "All validation checks passed"
+
   post_build:
     commands:
-      - echo 'Test result and agent evidence available in results/'
+      - echo "Validation stage completed"
+
+artifacts:
+  files:
+    - 'results/**/*'
+  discard-paths: no
+  base-directory: .
